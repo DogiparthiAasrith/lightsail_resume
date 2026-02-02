@@ -9,9 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configure AWS SDK v3
-// When using IAM role, SDK automatically uses instance credentials
+// Uses access keys from environment variables
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1'
+  region: process.env.AWS_REGION || 'us-east-1',
+  credentials: process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY ? {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  } : undefined
 });
 
 // Middleware

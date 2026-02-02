@@ -25,19 +25,21 @@ echo "✅ NPM version: $(npm --version)"
 echo "📦 Installing application dependencies..."
 npm install --production
 
-# Check if .env file exists, if not create it
+# Check if .env file exists
 if [ ! -f .env ]; then
-    echo "📝 Creating .env file..."
-    cat > .env << 'EOF'
-AWS_REGION=us-east-1
-S3_BUCKET_NAME=public-site-lightsail
-PORT=3000
-EOF
-    echo "✅ .env file created"
-    echo "⚠️  Update S3_BUCKET_NAME in .env if your bucket name is different"
-else
-    echo "✅ .env file found"
+    echo "⚠️  ERROR: .env file not found!"
+    echo "⚠️  Please create .env file with your AWS credentials:"
+    echo ""
+    echo "    AWS_ACCESS_KEY_ID=your_access_key"
+    echo "    AWS_SECRET_ACCESS_KEY=your_secret_key"
+    echo "    AWS_REGION=us-east-1"
+    echo "    S3_BUCKET_NAME=public-site-lightsail"
+    echo "    PORT=3000"
+    echo ""
+    exit 1
 fi
+
+echo "✅ .env file found"
 
 # Install PM2 if not installed
 if ! command -v pm2 &> /dev/null; then
