@@ -13,8 +13,8 @@ sudo apt update
 
 # Install Node.js if not installed
 if ! command -v node &> /dev/null; then
-    echo "📦 Installing Node.js..."
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+    echo "📦 Installing Node.js 20.x..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y nodejs
 fi
 
@@ -25,18 +25,19 @@ echo "✅ NPM version: $(npm --version)"
 echo "📦 Installing application dependencies..."
 npm install --production
 
-# Check if .env file exists
+# Check if .env file exists, if not create it
 if [ ! -f .env ]; then
-    echo "⚠️  WARNING: .env file not found!"
-    echo "⚠️  The .env file should be created by GitHub Actions with your secrets"
-    echo "⚠️  Or create it manually with:"
-    echo "     AWS_REGION=us-east-1"
-    echo "     S3_BUCKET_NAME=your-bucket-name"
-    echo "     PORT=3000"
-    exit 1
+    echo "📝 Creating .env file..."
+    cat > .env << 'EOF'
+AWS_REGION=us-east-1
+S3_BUCKET_NAME=public-site-lightsail
+PORT=3000
+EOF
+    echo "✅ .env file created"
+    echo "⚠️  Update S3_BUCKET_NAME in .env if your bucket name is different"
+else
+    echo "✅ .env file found"
 fi
-
-echo "✅ .env file found"
 
 # Install PM2 if not installed
 if ! command -v pm2 &> /dev/null; then
