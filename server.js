@@ -51,11 +51,12 @@ app.post('/upload', upload.single('resume'), async (req, res) => {
     // Read file from temporary location
     const fileContent = fs.readFileSync(req.file.path);
     
-    // Generate unique filename
+    // Generate unique filename organized by job role
     const timestamp = Date.now();
     const sanitizedName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const sanitizedJobTitle = jobTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const fileExtension = path.extname(req.file.originalname);
-    const s3Key = `resumes/${sanitizedName}_${timestamp}${fileExtension}`;
+    const s3Key = `${sanitizedJobTitle}/${sanitizedName}_${timestamp}${fileExtension}`;
 
     // Upload to S3
     const command = new PutObjectCommand({
